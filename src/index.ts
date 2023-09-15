@@ -46,6 +46,6 @@ app.get('/api/:trxTypeCommand', (req: TypedRequestQuery<{ trxTypeCommand: string
 
 });
 
-app.listen(port, (): void => {
+app.listen(port, '0.0.0.0', (): void => {
     console.log(`⚡️[server]: Server is running on port 4000`);
 });
