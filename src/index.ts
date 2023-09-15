@@ -18,15 +18,15 @@ const port: number = 4000;
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-//app.use(cors());
+app.use(cors());
 config({ path: join(__dirname, "./.env") });
 
 const model = createLanguageModel(process.env);
 const schema = readFileSync(join(__dirname, "trxTypeSchema.ts"), "utf-8");
 const translator = createJsonTranslator<TrxTypeResponse>(model, schema, "TrxTypeResponse");
 
-app.get('/', (req: Request, res: Response): void => {
-    req.params;
+app.get('/api', (req: Request, res: Response): void => {
+    console.log('message from server');
     res.json({'message':'message from server'});
 });
 
