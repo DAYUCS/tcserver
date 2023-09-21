@@ -5,13 +5,16 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import { config } from 'dotenv';
 import { createLanguageModel, createJsonTranslator, processRequests, Result } from "typechat";
-import { TrxTypeResponse } from './trxTypeSchema';
+import { TrxTypeResponse } from './schemas/trxTypeSchema';
 
 import { Query } from 'express-serve-static-core';
 
-export interface TypedRequestQuery<T extends Query> extends Express.Request {
-     query: T
-}
+import homeRouter from "./routes/home.routes";
+import trxtypeRouter from "./routes/trxtype.routes";
+
+//export interface TypedRequestQuery<T extends Query> extends Express.Request {
+//     query: T
+//}
 
 const app: Application = express();
 const port: number = 4000;
@@ -19,17 +22,15 @@ const port: number = 4000;
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
-config({ path: join(__dirname, "./.env") });
+app.use("/", homeRouter);
+app.use("/api/trxType", trxtypeRouter);
+//config({ path: join(__dirname, "./.env") });
 
-const model = createLanguageModel(process.env);
-const schema = readFileSync(join(__dirname, "trxTypeSchema.ts"), "utf-8");
-const translator = createJsonTranslator<TrxTypeResponse>(model, schema, "TrxTypeResponse");
+//const model = createLanguageModel(process.env);
+//const schema = readFileSync(join(__dirname, "./schemas/trxTypeSchema.ts"), "utf-8");
+//const translator = createJsonTranslator<TrxTypeResponse>(model, schema, "TrxTypeResponse");
 
-app.get('/api', (req: Request, res: Response): void => {
-    console.log('message from server');
-    res.json({'message':'message from server'});
-});
-
+/*
 app.get('/api/:trxTypeCommand', (req: TypedRequestQuery<{ trxTypeCommand: string }>, res: Response): void => {
     const trxTypeCommand = req.query.trxTypeCommand;
     console.log('command: ' + trxTypeCommand);
@@ -45,6 +46,7 @@ app.get('/api/:trxTypeCommand', (req: TypedRequestQuery<{ trxTypeCommand: string
     });
 
 });
+*/
 
 app.listen(port, '0.0.0.0', (): void => {
     console.log(`⚡️[server]: Server is running on port 4000`);
